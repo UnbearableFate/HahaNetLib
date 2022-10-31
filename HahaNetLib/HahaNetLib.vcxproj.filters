@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="EventLoop.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="Channel.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="EpollManager.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="Acceptor.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpServer.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="EventLoopThread.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPConnection.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>base\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadBuffer.cpp">
+      <Filter>base\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="WriteBuffer.cpp">
+      <Filter>base\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadPool.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{90666fd3-daae-42f4-ac80-d261a6bc376a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{c3022937-1e44-4640-a76b-6b2c1a0b8b38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\Buffer">
+      <UniqueIdentifier>{06592086-7610-43c8-8241-16515aee34fe}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EventLoop.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="Channel.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="EpollManager.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="Acceptor.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpServer.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="EventLoopThread.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPConnection.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>base\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadBuffer.h">
+      <Filter>base\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="WriteBuffer.h">
+      <Filter>base\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>base</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
