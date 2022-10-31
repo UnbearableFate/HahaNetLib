@@ -23,7 +23,6 @@ public:
 
 
 int main() {
-	MyServer* server = new MyServer(9877);
+	std::shared_ptr<MyServer> server = std::make_shared<MyServer>(9877);
 	server->start();
-	delete server;
 }

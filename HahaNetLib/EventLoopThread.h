@@ -17,14 +17,14 @@ public:
 	static std::mutex m;
 	*/
 	
-	EventLoopThread() :eventLoop(new EventLoop())
+	EventLoopThread():eventLoop(new EventLoop())
 		//,theThread([](std::shared_ptr<EventLoop> eloop) { eloop->loop(); }, eventLoop)
 	{
-		//theThread.detach();
+		eventLoop->isLooping = true;
 	}
 
 	auto initThread() {
-		auto theThread = std::thread([](std::shared_ptr<EventLoop> eloop) {eloop->loop(); }, eventLoop);
+		std::thread theThread(&EventLoop::loop,eventLoop);
 		theThread.detach();
 	}
 	auto getLoopPtr() {

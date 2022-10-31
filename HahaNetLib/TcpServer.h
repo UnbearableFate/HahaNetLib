@@ -42,7 +42,7 @@ public:
 	virtual void establishConnectionHandle(TcpConnection& conn) {};
 	~TcpServer() {}
 	TcpServer(int p = 8082) :mainLoop(new EventLoop()), threadPool(),
-		acceptor( p) {
+		acceptor(p) {
 		auto acceptorCh = mainLoop->addChannel(this->acceptor.getListenFd());
 		acceptorCh->setReadCallback([this]() {
 			sockaddr_in cliAddr;
