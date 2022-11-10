@@ -35,6 +35,9 @@
     <ClCompile Include="ThreadPool.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="MySQLConnecter.cpp">
+      <Filter>ORM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -45,6 +48,9 @@
     </Filter>
     <Filter Include="base\Buffer">
       <UniqueIdentifier>{06592086-7610-43c8-8241-16515aee34fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ORM">
+      <UniqueIdentifier>{d10d0fef-6b58-4e0f-af2b-279b5e4cd875}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="MySQLConnecter.h">
+      <Filter>ORM</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

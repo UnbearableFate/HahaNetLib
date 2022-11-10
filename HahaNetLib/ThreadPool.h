@@ -6,7 +6,7 @@ class ThreadPool
 {
 public:
 	std::vector<EventLoopThread> elThreads;
-	int index;
+	size_t index;
 
 	ThreadPool(int size = 2) :elThreads(size),index(-1) {}
 	auto initThreads() {

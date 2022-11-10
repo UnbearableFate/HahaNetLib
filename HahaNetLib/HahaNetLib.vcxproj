@@ -83,6 +83,7 @@
     <ClCompile Include="EventLoop.cpp" />
     <ClCompile Include="EventLoopThread.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MySQLConnecter.cpp" />
     <ClCompile Include="ReadBuffer.cpp" />
     <ClCompile Include="TCPConnection.cpp" />
     <ClCompile Include="TcpServer.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="EpollManager.h" />
     <ClInclude Include="EventLoop.h" />
     <ClInclude Include="EventLoopThread.h" />
+    <ClInclude Include="MySQLConnecter.h" />
     <ClInclude Include="ReadBuffer.h" />
     <ClInclude Include="TCPConnection.h" />
     <ClInclude Include="TcpServer.h" />
@@ -105,7 +107,11 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <CppLanguageStandard>c++17</CppLanguageStandard>
+      <AdditionalIncludeDirectories>/usr/include/mysql-cppconn-8;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <LibraryDependencies>mysqlcppconn8;%(LibraryDependencies)</LibraryDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

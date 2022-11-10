@@ -22,12 +22,13 @@ private:
 	std::shared_ptr<EventLoop> ownerloop;
 protected:
 	auto sendDataInBuf() {
-		writeBuffer.writeTo(connfd);
-		chan->disableEvent(Channel::WRITE_EVE);
+		if (writeBuffer.writeTo(connfd) == 0) {
+			chan->disableEvent(Channel::WRITE_EVE);
+		}
 	}
 
 	auto saveDataToBufFromSocket() {
-		if (readBuffer.readFrom(connfd) > 0) {
+		if (readBuffer.readFromSocket(connfd) > 0) {
 			msgHandleCb();
 		}
 		else

@@ -5,6 +5,9 @@
 #include<memory>
 #include "TcpServer.h"
 #include <iostream>
+#include <mysqlx/xdevapi.h>
+using namespace mysqlx;
+
 using namespace std;
 class MyServer :public TcpServer {
 public:

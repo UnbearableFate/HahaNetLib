@@ -1,19 +1,15 @@
 #pragma once
 #include "Buffer.h"
-class ReadBuffer: public Buffer
+#include "sys/socket.h"
+#include "sys/uio.h"
+#include<array>
+#include<exception>
+
+constexpr int EXTRA_DATA_LEN = 65536;
+class ReadBuffer : public Buffer
 {
 public:
-	ReadBuffer():Buffer() {}
-	auto readFrom(int fd) -> auto {
-		this->expansion();
-		this->length += recv(fd, data.data() + beg, data.size() - beg, 0);
-		return this->length;
-	}
-
-	auto getStringFromBuf() -> std::string {
-		auto res = std::string(data.begin(), data.begin() + length);
-		this->reset();
-		return res;
-	}
+	ReadBuffer() :Buffer() {}
+	auto readFromSocket(int fd)->size_t;
+	auto getStringFromBuf()->std::string;
 };
-

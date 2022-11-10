@@ -10,16 +10,10 @@ class Buffer
 protected:
 	static const size_t DEF_MAX_LEN;
 	std::vector<char> data;
-	size_t length;
-	size_t beg;
-	auto expansion() {
-		if (beg + length >= data.size() / 2) {
-			data.resize(std::max(data.size() * 2,DEF_MAX_LEN));
-		}
-	}
+	size_t length; // length of data which can be read by user or send to socket 
+	size_t beg; // chars before beg have been sent or read by user, 
 	auto reset() {
-		data.clear();
-		data.resize(DEF_MAX_LEN);
+		//data.clear();
 		beg = 0;
 		length = 0;
 	}
@@ -28,11 +22,23 @@ public:
 		return data.begin()+beg;
 	}
 
+	auto beginPtr() {
+		return data.data() + beg;
+	}
+
 	auto end() {
 		return this->begin() + this->length ;
 	}
+
+	auto endPtr() {
+		return this->beginPtr() + this->length;
+	}
 	auto getLength() {
 		return this->length;
+	}
+
+	size_t blankSpaceSize() {
+		return this->data.end() - this->end();
 	}
 
 	Buffer():data(2048),beg(0) {
