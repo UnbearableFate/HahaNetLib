@@ -1,0 +1,1 @@
+add_library(HahaLibBuffer STATIC ReadBuffer.cpp WriteBuffer.cpp Buffer.cpp)
