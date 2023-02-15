@@ -9,11 +9,17 @@
 #include <sstream>
 
 #include "../Net/TcpServer.h"
+#include "HttpRequest.h"
 
 using namespace std;
 namespace Bhttp = boost::beast::http;
+
 using StringRespone = Bhttp::response<Bhttp::string_body>;
+
 using ControllerType = StringRespone(string);
+using SimpleControllerType = string(string);
+using CustomControllerType = bool(TcpConnection&);
+
 class HttpServer : public TcpServer {
    private:
     /* data */
@@ -37,13 +43,19 @@ class HttpServer : public TcpServer {
 
    protected:
     std::map<string, function<ControllerType>> simpleRoute;
+    std::map<string, function<SimpleControllerType>> stringRoute;
 
    public:
     HttpServer(int p, int threadNum) : TcpServer(p, threadNum) {}
     ~HttpServer(){};
+
     void registerRoute(string subUrl, function<ControllerType> controller) {
         this->simpleRoute.try_emplace(subUrl, controller);
     }
+    void registerRoute(string subUrl, function<SimpleControllerType> controller) {
+        this->stringRoute.try_emplace(subUrl, controller);
+    }
+
     void requestHandle(TcpConnection& conn) {
         auto reqStr = conn.receiveMsg();
         Bhttp::request_parser<Bhttp::string_body> parser;
@@ -54,32 +66,18 @@ class HttpServer : public TcpServer {
         if (parser.need_eof()) {
             parser.put_eof(ec);
         }
-        auto pRes = parser.get();
-        auto parsedBody = pRes.body();
-        auto reqUrl = pRes.target();
-        auto met = pRes.method();
-        auto keepAlive = pRes.keep_alive();
-        if (auto urlParseRes = boost::urls::parse_uri(reqUrl);
-            urlParseRes.has_value()) {
-            auto query = urlParseRes.value().query();
+        HttpRequest req(parser.get(), &parser);
+        conn.setKeepAlive(req.keep_alive());
+        req.parseUrl();
+        if (this->stringRoute.contains("/")) {
+            auto res = this->stringRoute["/"](req.getUrl());
+            conn.sendMsg(res);
         }
-
-        auto length = parser.content_length().get_value_or(0);
-        auto body = reqStr.substr(reqStr.size() - length, length);
-        for (const auto& e : pRes.base()) {
-            cout << e.name_string() << " : " << e.value() << endl;
+        if (this->simpleRoute.contains("/")) {
+            auto res = this->simpleRoute["/"](req.getUrl());
+            auto respStr = this->resp2Str(res);
+            conn.sendMsg(respStr);
         }
-
-        auto res = this->simpleRoute["/"](reqUrl.to_string());
-        /*
-StringRespone resp;
-resp.result(200);
-resp.body() = body;
-resp.insert("Content-Type", "text/plain ; charset=utf-8");
-resp.prepare_payload();
-        */
-        auto respStr = this->resp2Str(res);
-        conn.sendMsg(respStr);
     }
 
     void establishConnectionHandle(TcpConnection& conn) {

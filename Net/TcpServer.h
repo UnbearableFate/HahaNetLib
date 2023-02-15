@@ -16,9 +16,14 @@ class TcpServer {
     std::map<int, std::shared_ptr<TcpConnection>> connMap;
 
     auto disconntion(int fd) {
-        connMap[fd]->ownerloop->removeChannel(fd);
-        connMap.erase(fd);
-        printf("close connection");
+        mainLoop->addPendingFunc([&] {
+            connMap[fd]->setMsgHandleCb(nullptr);
+            connMap[fd]->setDisconnectionCb(nullptr);
+            auto ct = connMap[fd].use_count();
+            connMap[fd].reset();
+            connMap.erase(fd);
+        });
+        printf("close connection\n");
     }
 
     auto createNewConnetion(int connfd, sockaddr_in cli) -> void;
@@ -37,7 +42,7 @@ class TcpServer {
                 accept(this->acceptor.getListenFd(), (sockaddr*)&cliAddr, &len);
             if (connfd > 0) {
                 this->createNewConnetion(connfd, cliAddr);
-                this->establishConnectionHandle(*(this->connMap[connfd]));
+                this->establishConnectionHandle(std::ref(*(this->connMap[connfd])));
             }
         });
         acceptorCh->enableEvent(Channel::READ_EVE);

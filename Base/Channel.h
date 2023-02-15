@@ -1,5 +1,7 @@
 #pragma once
 #include <sys/epoll.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #include <functional>
 class Channel {
@@ -15,11 +17,8 @@ class Channel {
           errorCallback(nullptr),
           event(0),
           revent(0) {}
-    // Channel(int f, EventLoop* mgr = nullptr) :fd(f), event(0),
-    // readCallback(nullptr), writeCallback(nullptr), errorCallback(nullptr),
-    // ownerLoop(mgr) {} ~Channel(); void setOwnerLoop(EventLoop* loop) {
-    // ownerLoop = loop; }; auto getOwnerLoop() { return ownerLoop; };
-    int getFd() const { return fd; }
+
+    int getFd() { return fd; }
     int getEvent() const { return event; }
     void setRevent(int rev) { this->revent = rev; }
     void handleIO();
@@ -42,6 +41,14 @@ class Channel {
     }
     void setCloseCallback(std::function<void(void)> func) {
         closeCallback = std::move(func);
+    }
+
+    ~Channel() {
+        shutdown(fd, SHUT_RDWR);
+        readCallback = nullptr;
+        writeCallback = nullptr;
+        closeCallback = nullptr;
+        errorCallback = nullptr;
     }
 
    private:

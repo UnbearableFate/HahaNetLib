@@ -22,7 +22,8 @@ class EventLoop {
     std::map<int, std::shared_ptr<Channel>> channels;
     bool used = false;
     EpollManager epollMgr;
-    std::vector<std::function<void(void)>> pendingFuncList;
+    std::mutex mtx = std::mutex();
+    std::vector<std::function<void(void)>> pendingFuncList = std::vector<std::function<void(void)>>();  // mutex
     EventLoop(EventLoop&) = delete;
     EventLoop& operator=(const EventLoop&) = delete;
     std::shared_ptr<Channel> notifiChannel;

@@ -4,16 +4,17 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdlib>
+#include <mutex>
 #include <string>
 #include <system_error>
 #include <vector>
 class Buffer {
    protected:
     static const size_t DEF_MAX_LEN;
-    std::vector<char> data;
-    size_t
-        length;  // length of data which can be read by user or send to socket
-    size_t beg;  // chars before beg have been sent or read by user,
+    std::vector<char> data{};
+    std::mutex mtx{};
+    size_t length = 0;  // length of data which can be read by user or send to socket
+    size_t beg = 0;     // chars before beg have been sent or read by user,
     auto reset() {
         // data.clear();
         beg = 0;

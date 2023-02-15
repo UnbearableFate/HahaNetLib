@@ -25,9 +25,17 @@ class TcpConnection {
     std::chrono::_V2::system_clock::time_point finishTimeStamp;
 
    protected:
+    bool connected = true;
     auto sendDataInBuf() {
-        if (writeBuffer.writeTo(connfd) == 0) {
+        auto res = writeBuffer.writeTo(connfd);
+        if (res < 0) {
+            res = writeBuffer.writeTo(connfd);
+        }
+        if (res == 0) {
             chan->disableEvent(Channel::WRITE_EVE);
+        }
+        if (res < 0) {
+            this->breakConnection();
         }
     }
 
@@ -39,10 +47,10 @@ class TcpConnection {
             if (this->keepAlive) {
                 auto timeDiff = std::chrono::system_clock::now() - this->finishTimeStamp;
                 if (timeDiff <= std::chrono::nanoseconds::zero()) {
-                    disconnection();
+                    this->breakConnection();
                 }
             } else {
-                disconnection();
+                this->breakConnection();
             }
         };
     }
@@ -59,6 +67,9 @@ class TcpConnection {
 
    public:
     friend class TcpServer;
+    auto isConnnected() const -> bool {
+        return connected;
+    }
     static constexpr std::chrono::minutes aliveMinute{1};
     auto getClientAddr() {
         std::string res(INET_ADDRSTRLEN, '\0');
@@ -78,13 +89,29 @@ class TcpConnection {
 
     auto sendMsg(std::string msg) {
         writeBuffer.saveToBuf(msg);
-        this->chan->enableEvent(Channel::WRITE_EVE);
+        if (chan != nullptr)
+            this->chan->enableEvent(Channel::WRITE_EVE);
+    }
+
+    auto sendAsyncFunc(std::function<void()> func) {
+        this->ownerloop->addPendingFunc(func);
+    }
+
+    void breakConnection() {
+        this->chan.reset();
+        this->ownerloop->removeChannel(connfd);
+        this->ownerloop.reset();
+        connected = false;
+        this->disconnection();
     }
 
     ~TcpConnection() {
-        // shutdown(connfd, SHUT_RDWR);
+        close(connfd);
+        msgHandleCb = nullptr;
+        chan.reset();
+        ownerloop.reset();
+        connfd = -1;
         // chan.reset();
-        printf("xigou");
     }
 };
 
